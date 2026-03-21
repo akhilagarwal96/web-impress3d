@@ -1,0 +1,25 @@
+[
+  {
+    "name": "Groot Planter",
+    "price": 349,
+    "tags": ["home", "office", "desk"],
+    "featured": true,
+    "images": [
+        "https://github.com/akhilagarwal96/web-impress3d/blob/main/fandom-groot-001?raw=true",
+        "https://github.com/akhilagarwal96/web-impress3d/blob/main/fandom-groot-002?raw=true",
+        "https://github.com/akhilagarwal96/web-impress3d/blob/main/fandom-groot-003?raw=true"
+    ],
+    "description": "Cute little Groot planter, perfect for your home and office aesthetics.\nSize: 5 inch * 5 inch * 5 inch"
+  },
+  {
+    "name": "Articulated Leg Planter",
+    "price": 199,
+    "tags": ["home", "office", "desk"],
+    "featured": true,
+    "images": [
+        "https://github.com/akhilagarwal96/web-impress3d/blob/main/planter-small-001?raw=true",
+        "https://github.com/akhilagarwal96/web-impress3d/blob/main/planter-small-002?raw=true"
+    ],
+    "description": "Planter with articulated legs - enhance your window sills and impress everyone.\nSize: 5 inch * 5 inch * 5 inch"
+  }
+]
