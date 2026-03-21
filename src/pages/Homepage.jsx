@@ -3,14 +3,13 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
-// 1. Firebase Imports
 import { collection, getDocs, query, where, orderBy } from "firebase/firestore";
 import { db } from "../firebase";
 
 const Homepage = () => {
   const scrollRef = useRef(null);
   const [featuredProducts, setFeaturedProducts] = useState([]);
-  const [dbCategories, setDbCategories] = useState([]); // New state for categories
+  const [dbCategories, setDbCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,16 +17,27 @@ const Homepage = () => {
       try {
         setLoading(true);
         
-        // Fetch Featured Products
-        const prodQuery = query(collection(db, "products"), where("featured", "==", true));
+        // 1. Fetch Featured Products (Querying the string "true")
+        const prodQuery = query(collection(db, "products"), where("featured", "==", "true"));
         const prodSnap = await getDocs(prodQuery);
-        const productsArray = prodSnap.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
+        
+        const productsArray = prodSnap.docs.map(doc => {
+          const data = doc.data();
+          
+          // Ensure images are processed as an array
+          const imagesArray = data.images && typeof data.images === 'string'
+            ? data.images.split(',').map(url => url.trim()).filter(Boolean)
+            : Array.isArray(data.images) ? data.images : [];
+
+          return {
+            id: doc.id,
+            ...data,
+            images: imagesArray
+          };
+        });
         setFeaturedProducts(productsArray);
 
-        // Fetch Categories for the bottom section
+        // 2. Fetch Categories
         const catQuery = query(collection(db, "categories"), orderBy("order", "asc"));
         const catSnap = await getDocs(catQuery);
         const catsArray = catSnap.docs.map(doc => ({
@@ -56,8 +66,6 @@ const Homepage = () => {
 
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans">
-      
-      {/* --- HEADER (Prop removed, now autonomous) --- */}
       <Header />
 
       {/* --- HERO SECTION --- */}
@@ -106,12 +114,14 @@ const Homepage = () => {
                 whileHover={{ y: -5 }}
               >
                 <Link to={`/product/${product.id}`} className="block">
-                  {/* Standardized Aspect Ratio Container */}
                   <div className="aspect-square bg-gray-50 rounded-xl overflow-hidden mb-2 border border-gray-100 relative w-full">
                     <img 
-                      src={product.images?.[0] || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400'} 
+                      src={product.images[0] || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400'} 
                       alt={product.name} 
                       className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 block" 
+                      onError={(e) => {
+                        e.target.src = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400';
+                      }}
                     />
                   </div>
                   <div className="flex flex-col">
@@ -133,7 +143,7 @@ const Homepage = () => {
         </div>
       </section>
 
-      {/* --- CATEGORIES SECTION (Now dynamic from Firebase) --- */}
+      {/* --- CATEGORIES SECTION --- */}
       <section className="px-6 py-12 border-t border-gray-100">
         <h3 className="text-2xl font-bold uppercase tracking-tighter mb-8">Categories</h3>
         <div className="flex gap-4 overflow-x-auto no-scrollbar pb-6">

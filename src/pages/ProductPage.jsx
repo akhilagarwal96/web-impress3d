@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../components/Header';
-// 1. Import Firebase Firestore tools
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -15,12 +14,28 @@ const ProductPage = () => {
     const fetchProduct = async () => {
       setLoading(true);
       try {
-        // Direct reference to the document by ID
         const docRef = doc(db, "products", productId);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setProduct({ id: docSnap.id, ...docSnap.data() });
+          const data = docSnap.data();
+
+          // Convert "images" string to Array
+          const imagesArray = data.images && typeof data.images === 'string'
+            ? data.images.split(',').map(url => url.trim()).filter(Boolean)
+            : Array.isArray(data.images) ? data.images : [];
+
+          // Convert "tags" string to Array
+          const tagsArray = data.tags && typeof data.tags === 'string'
+            ? data.tags.split(',').map(tag => tag.trim().toLowerCase()).filter(Boolean)
+            : Array.isArray(data.tags) ? data.tags : [];
+
+          setProduct({ 
+            id: docSnap.id, 
+            ...data, 
+            images: imagesArray, 
+            tags: tagsArray 
+          });
         } else {
           console.log("No such product!");
         }
@@ -34,14 +49,12 @@ const ProductPage = () => {
     fetchProduct();
     window.scrollTo(0, 0);
 
-    // Check wishlist status from local storage
     const currentWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
     if (currentWishlist.includes(productId)) {
       setIsAdded(true);
     }
   }, [productId]);
 
-  // Wishlist Logic
   const addToWishlist = () => {
     if (!product) return;
     const currentWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
@@ -89,21 +102,22 @@ const ProductPage = () => {
 
       <main className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-2 gap-12">
         
-        {/* LEFT: 4-IMAGE GRID */}
-        <div className="grid grid-cols-2 gap-4">
-          {/* Check if images exists, is an array, and has at least one item */}
-          {Array.isArray(product.images) && product.images.length > 0 ? (
+        {/* LEFT: IMAGE GRID */}
+        <div className="grid grid-cols-2 gap-4 auto-rows-min">
+          {product.images.length > 0 ? (
             product.images.map((img, idx) => (
-              <div key={idx} className="aspect-square bg-gray-100 rounded-2xl overflow-hidden border border-gray-100">
+              <div key={idx} className="aspect-square bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 group">
                 <img 
                   src={img} 
-                  alt={`View ${idx}`} 
-                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" 
+                  alt={`${product.name} view ${idx}`} 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                  onError={(e) => {
+                    e.target.src = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400';
+                  }}
                 />
               </div>
             ))
           ) : (
-            /* FALLBACK: Show 4 empty placeholder slots if no images exist */
             [1, 2, 3, 4].map((_, idx) => (
               <div key={idx} className="aspect-square bg-gray-50 rounded-2xl flex items-center justify-center border border-dashed border-gray-200">
                 <span className="text-[10px] uppercase font-mono text-gray-400">No Image {idx + 1}</span>
@@ -114,34 +128,41 @@ const ProductPage = () => {
 
         {/* RIGHT: TECHNICAL DETAILS */}
         <div className="flex flex-col">
-          <span className="text-sm font-mono text-gray-400 uppercase tracking-widest mb-2">
-            SKU: {product.id}
-          </span>
+          <div className="flex items-center gap-3 mb-4">
+            <span className="text-xs font-mono text-gray-400 uppercase tracking-widest">
+              SKU: {product.id}
+            </span>
+            {product.tags.map((tag, i) => (
+              <span key={i} className="px-2 py-0.5 bg-gray-100 text-[10px] font-bold uppercase tracking-tighter rounded text-gray-500">
+                {tag}
+              </span>
+            ))}
+          </div>
           
           <h1 className="text-5xl md:text-6xl font-black uppercase italic leading-none mb-6" style={{ fontFamily: 'Impact, sans-serif' }}>
             {product.name}
           </h1>
 
           <div className="flex items-baseline gap-4 mb-8">
-            <span className="text-4xl font-bold">₹{product.price?.toFixed(2)}</span>
+            <span className="text-4xl font-bold">₹{Number(product.price || 0).toLocaleString('en-IN')}</span>
           </div>
 
           <div className="border-y border-gray-100 py-8 mb-8">
             <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Description</h3>
-            <p className="text-gray-600 leading-relaxed whitespace-pre-line">
+            <p className="text-gray-600 leading-relaxed whitespace-pre-line text-sm">
               {product.description}
             </p>
           </div>
 
           <div className="flex flex-col gap-6">
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-              <span className="font-bold uppercase text-xs">Minimum Order Quantity</span>
+            <div className="flex items-center justify-between p-5 bg-gray-50 rounded-2xl border border-gray-100">
+              <span className="font-bold uppercase text-[10px] text-gray-400 tracking-widest">Minimum Order</span>
               <span className="font-mono font-bold text-lg">{product.minQuantity || 1} Units</span>
             </div>
 
             <button 
               onClick={addToWishlist}
-              className={`w-full py-5 font-bold uppercase tracking-[0.2em] rounded-full transition-all active:scale-95 shadow-xl shadow-black/10 ${
+              className={`w-full py-5 font-bold uppercase tracking-[0.2em] rounded-full transition-all active:scale-95 shadow-xl shadow-black/5 text-xs ${
                 isAdded 
                 ? 'bg-red-500 text-white hover:bg-red-600' 
                 : 'bg-black text-white hover:bg-blue-600'
@@ -149,6 +170,10 @@ const ProductPage = () => {
             >
               {isAdded ? 'Remove from Wishlist' : 'Add to Wishlist'}
             </button>
+            
+            <p className="text-[10px] text-center text-gray-400 uppercase tracking-widest">
+              Secure Checkout • 3D Printed on Demand
+            </p>
           </div>
         </div>
       </main>
