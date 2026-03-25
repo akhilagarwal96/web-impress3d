@@ -17,7 +17,7 @@ const Homepage = () => {
       try {
         setLoading(true);
         
-        // 1. Fetch ALL products (Removing the 'where' filter to bypass strictness)
+        // 1. Fetch ALL products
         const prodSnap = await getDocs(collection(db, "products"));
         
         const allProducts = prodSnap.docs.map(doc => {
@@ -33,7 +33,7 @@ const Homepage = () => {
           };
         });
 
-        // 2. FORGIVING FILTER: Matches "1", 1, "true", or true
+        // 2. Filter for Featured
         const featured = allProducts.filter(p => 
           p.featured === "1" || 
           p.featured === 1 || 
@@ -41,7 +41,6 @@ const Homepage = () => {
           p.featured === true
         );
         
-        console.log("Featured items found:", featured.length);
         setFeaturedProducts(featured);
 
         // 3. Fetch Categories
@@ -119,7 +118,8 @@ const Homepage = () => {
                     <img 
                       src={product.images[0] || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400'} 
                       alt={product.name} 
-                      className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" 
+                      /* REMOVED grayscale AND group-hover:grayscale-0 CLASSES BELOW */
+                      className="absolute inset-0 w-full h-full object-cover transition-all duration-500" 
                       onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400'; }}
                     />
                   </div>
@@ -131,7 +131,7 @@ const Homepage = () => {
             ))
           ) : (
             <div className="w-full py-16 text-center border-2 border-dashed border-gray-100 rounded-2xl text-gray-400 uppercase text-xs tracking-widest">
-               No featured blueprints found. Check Firebase "featured" field.
+               No featured blueprints found.
             </div>
           )}
         </div>
