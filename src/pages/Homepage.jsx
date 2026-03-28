@@ -88,15 +88,27 @@ const Homepage = () => {
         </div>
       </section>
 
+      {/* --- FEATURED PRODUCTS SECTION --- */}
       <section className="px-6 py-4 relative">
-        <div className="flex justify-between items-end mb-4">
-          <h3 className="text-2xl font-bold uppercase tracking-tighter">Featured Products</h3>
-          <div className="flex gap-2">
-            <button onClick={() => scroll('left')} className="p-2 border border-black rounded-full hover:bg-black hover:text-white transition-all">
-              <ChevronLeft size={20} />
+        {/* Header: Improved spacing for mobile */}
+        <div className="flex justify-between items-center mb-6"> 
+          <h3 className="text-xl md:text-2xl font-bold uppercase tracking-tighter pr-4">
+            Featured Products
+          </h3>
+          
+          {/* Navigation Buttons: Smaller on mobile, standard on laptop */}
+          <div className="flex gap-1.5 md:gap-2 flex-shrink-0">
+            <button 
+              onClick={() => scroll('left')} 
+              className="p-1.5 md:p-2 border border-black rounded-full hover:bg-black hover:text-white transition-all active:scale-90"
+            >
+              <ChevronLeft size={16} className="md:w-5 md:h-5" />
             </button>
-            <button onClick={() => scroll('right')} className="p-2 border border-black rounded-full hover:bg-black hover:text-white transition-all">
-              <ChevronRight size={20} />
+            <button 
+              onClick={() => scroll('right')} 
+              className="p-1.5 md:p-2 border border-black rounded-full hover:bg-black hover:text-white transition-all active:scale-90"
+            >
+              <ChevronRight size={16} className="md:w-5 md:h-5" />
             </button>
           </div>
         </div>
@@ -137,7 +149,7 @@ const Homepage = () => {
         </div>
       </section>
 
-      {/* --- CONSISTENT CATEGORIES SECTION --- */}
+      {/* --- CATEGORIES SECTION --- */}
       <section className="px-6 py-4 relative border-t border-gray-100 mt-8">
         {/* Header matched to Featured Products */}
         <div className="flex justify-between items-end mb-4">
