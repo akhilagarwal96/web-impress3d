@@ -123,7 +123,7 @@ const Homepage = () => {
                       onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400'; }}
                     />
                   </div>
-                  <h4 className="text-lg font-bold uppercase tracking-tight italic" style={{ fontFamily: 'Impact, sans-serif' }}>
+                  <h4 className="text-xl uppercase tracking-tight" style={{ fontFamily: 'Impact, sans-serif' }}>
                     {product.name}
                   </h4>
                 </Link>
@@ -137,24 +137,42 @@ const Homepage = () => {
         </div>
       </section>
 
-      {/* --- TEXT-ONLY CATEGORY GRID --- */}
-      <section className="px-6 py-12 border-t border-gray-100">
-        <h3 className="text-2xl font-bold uppercase tracking-tighter mb-8 italic" style={{ fontFamily: 'Impact, sans-serif' }}>
-          Shop By Categories
-        </h3>
+      {/* --- CONSISTENT CATEGORIES SECTION --- */}
+      <section className="px-6 py-4 relative border-t border-gray-100 mt-8">
+        {/* Header matched to Featured Products */}
+        <div className="flex justify-between items-end mb-4">
+          <h3 className="text-2xl font-bold uppercase tracking-tighter">
+            Shop By Categories
+          </h3>
+          {/* Optional: Add a 'View All' or similar if you want to match the arrow spacing */}
+          <div className="flex gap-2 opacity-0 pointer-events-none">
+            <button className="p-2 border border-black rounded-full"><ChevronLeft size={20} /></button>
+          </div>
+        </div>
         
-        {/* Grid: 2 columns on mobile, 4-6 on desktop */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        {/* Grid Container: 2 columns on mobile, 4-6 on desktop */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 pb-2">
           {dbCategories.map(cat => (
-            <Link 
-              to={`/category/${cat.id}`} 
+            <motion.div 
               key={cat.id} 
-              className="flex items-center justify-center p-6 bg-gray-900 text-white rounded-xl hover:bg-blue-600 transition-all duration-300 min-h-[100px] text-center shadow-sm active:scale-95"
+              whileHover={{ y: -5 }}
+              className="w-full"
             >
-              <span className="text-sm md:text-base uppercase font-bold tracking-widest leading-tight" style={{ fontFamily: 'Impact, sans-serif' }}>
-                {cat.name || cat.id}
-              </span>
-            </Link>
+              <Link 
+                to={`/category/${cat.id}`} 
+                className="flex items-center justify-center aspect-[1.5/1] bg-gray-900 text-white rounded-xl hover:bg-blue-600 transition-all duration-300 text-center px-4 shadow-sm"
+              >
+                <span 
+                  className="text-2xl md:text-3xl uppercase tracking-[0.15em] px-2" 
+                  style={{ 
+                    fontFamily: 'Impact, sans-serif',
+                    lineHeight: '1.2' 
+                  }}
+                >
+                  {cat.name || cat.id}
+                </span>
+              </Link>
+            </motion.div>
           ))}
         </div>
       </section>
