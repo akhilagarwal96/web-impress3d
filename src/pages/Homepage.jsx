@@ -163,7 +163,7 @@ const Homepage = () => {
                 className="flex items-center justify-center aspect-[1.5/1] bg-gray-900 text-white rounded-xl hover:bg-blue-600 transition-all duration-300 text-center px-4 shadow-sm"
               >
                 <span 
-                  className="text-2xl md:text-3xl uppercase tracking-[0.15em] px-2" 
+                  className="text-xl md:text-2xl uppercase tracking-[0.15em] px-2" 
                   style={{ 
                     fontFamily: 'Impact, sans-serif',
                     lineHeight: '1.2' 
