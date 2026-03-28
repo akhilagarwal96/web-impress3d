@@ -137,16 +137,32 @@ const Homepage = () => {
         </div>
       </section>
 
+      {/* --- CATEGORIES SECTION --- */}
       <section className="px-6 py-12 border-t border-gray-100">
-        <h3 className="text-2xl font-bold uppercase tracking-tighter mb-8">Categories</h3>
-        <div className="flex gap-4 overflow-x-auto no-scrollbar pb-6">
+        <h3 className="text-2xl font-bold uppercase tracking-tighter mb-8 border-l-4 border-black pl-4">
+          Shop By Categories
+        </h3>
+        
+        {/* Grid: 2 columns on mobile, 6 on desktop */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
           {dbCategories.map(cat => (
             <Link 
               to={`/category/${cat.id}`} 
               key={cat.id} 
-              className="flex-shrink-0 px-10 py-8 bg-gray-900 text-white rounded-xl hover:bg-blue-600 transition-all duration-300 min-w-[200px] text-center"
+              className="group flex flex-col items-center"
             >
-              <span className="text-xl uppercase tracking-[0.1em]" style={{ fontFamily: 'Impact, sans-serif' }}>
+              {/* Image Container */}
+              <div className="w-full aspect-square bg-gray-100 rounded-xl overflow-hidden mb-3 border border-gray-100 relative">
+                <img 
+                  src={cat.image || 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=400'} 
+                  alt={cat.name} 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=400'; }}
+                />
+              </div>
+
+              {/* Text Label */}
+              <span className="text-center text-[11px] md:text-sm font-bold uppercase tracking-tight leading-tight group-hover:text-blue-600 transition-colors">
                 {cat.name || cat.id}
               </span>
             </Link>
