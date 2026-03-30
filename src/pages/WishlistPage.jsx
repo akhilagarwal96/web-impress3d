@@ -1,18 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db, auth } from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import { Trash2, ArrowRight } from 'lucide-react';
 
 const WishlistPage = () => {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const fetchWishlistData = async () => {
-      setLoading(true);
-      const savedIds = JSON.parse(localStorage.getItem('wishlist')) || [];
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        fetchWishlistData(currentUser);
+      } else {
+        setWishlistItems([]);
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const fetchWishlistData = async (currentUser) => {
+    setLoading(true);
+    
+    try {
+      const userDocRef = doc(db, "users", currentUser.email);
+      const userDocSnap = await getDoc(userDocRef);
+      
+      let savedIds = [];
+      
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        savedIds = userData.wishlist || [];
+      }
       
       if (savedIds.length === 0) {
         setWishlistItems([]);
@@ -20,43 +45,49 @@ const WishlistPage = () => {
         return;
       }
 
-      try {
-        const productPromises = savedIds.map(id => getDoc(doc(db, "products", id)));
-        const docSnaps = await Promise.all(productPromises);
-        
-        const items = docSnaps
-          .filter(snap => snap.exists())
-          .map(snap => {
-            const data = snap.data();
-            
-            // Convert images string to Array (matches your other pages)
-            const imagesArray = data.images && typeof data.images === 'string'
-              ? data.images.split(',').map(url => url.trim()).filter(Boolean)
-              : Array.isArray(data.images) ? data.images : [];
+      const productPromises = savedIds.map(id => getDoc(doc(db, "products", id)));
+      const docSnaps = await Promise.all(productPromises);
+      
+      const items = docSnaps
+        .filter(snap => snap.exists())
+        .map(snap => {
+          const data = snap.data();
+          
+          const imagesArray = data.images && typeof data.images === 'string'
+            ? data.images.split(',').map(url => url.trim()).filter(Boolean)
+            : Array.isArray(data.images) ? data.images : [];
 
-            return { 
-              id: snap.id, 
-              ...data,
-              images: imagesArray 
-            };
-          });
+          return { 
+            id: snap.id, 
+            ...data,
+            images: imagesArray 
+          };
+        });
 
-        setWishlistItems(items);
-      } catch (error) {
-        console.error("Error fetching wishlist items:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      setWishlistItems(items);
+    } catch (error) {
+      console.error("Error fetching wishlist items:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchWishlistData();
-  }, []);
+  const removeFromWishlist = async (id) => {
+    if (!user) return;
 
-  const removeFromWishlist = (id) => {
     const updatedItems = wishlistItems.filter(item => item.id !== id);
     setWishlistItems(updatedItems);
     const updatedIds = updatedItems.map(item => item.id);
-    localStorage.setItem('wishlist', JSON.stringify(updatedIds));
+    
+    try {
+      const userDocRef = doc(db, "users", user.email);
+      await setDoc(userDocRef, {
+        name: user.displayName,
+        wishlist: updatedIds
+      }, { merge: true });
+    } catch (error) {
+      console.error("Error updating wishlist:", error);
+    }
   };
 
   return (
@@ -86,7 +117,7 @@ const WishlistPage = () => {
                 <div className="aspect-square bg-gray-50 rounded-xl overflow-hidden mb-4 relative">
                   <img 
                     src={product.images[0] || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400'} 
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700" 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" 
                     alt={product.name}
                     onError={(e) => {
                       e.target.src = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400';
@@ -113,7 +144,7 @@ const WishlistPage = () => {
                   
                   <Link 
                     to={`/product/${product.id}`} 
-                    className="mt-auto w-full py-4 border border-black text-center text-[10px] font-bold uppercase tracking-[0.2em] rounded-full hover:bg-black hover:text-white transition-all active:scale-95"
+                    className="mt-auto w-full py-4 border border-black text-center text-0px] font-bold uppercase tracking-[0.2em] rounded-full hover:bg-black hover:text-white transition-all active:scale-95"
                   >
                     View Details
                   </Link>
