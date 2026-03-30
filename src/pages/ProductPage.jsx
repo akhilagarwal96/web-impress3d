@@ -1,14 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../components/Header';
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db, auth } from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+
 
 const ProductPage = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAdded, setIsAdded] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        const userDocRef = doc(db, "users", currentUser.email);
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          const wishlist = userData.wishlist || [];
+          setIsAdded(wishlist.includes(productId));
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, [productId]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -48,25 +68,57 @@ const ProductPage = () => {
 
     fetchProduct();
     window.scrollTo(0, 0);
-
-    const currentWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-    if (currentWishlist.includes(productId)) {
-      setIsAdded(true);
-    }
   }, [productId]);
 
-  const addToWishlist = () => {
-    if (!product) return;
-    const currentWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-    
-    if (!currentWishlist.includes(product.id)) {
-      const updatedWishlist = [...currentWishlist, product.id];
-      localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
-      setIsAdded(true);
-    } else {
-      const updatedWishlist = currentWishlist.filter(id => id !== product.id);
-      localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
-      setIsAdded(false);
+  const addToWishlist = async () => {
+    if (!product || !user) {
+      alert("Please sign in to add items to your wishlist");
+      return;
+    }
+
+    console.log("User:", user.email);
+    console.log("Product ID:", product.id);
+
+    try {
+      const userDocRef = doc(db, "users", user.email);
+      console.log("Fetching user document...");
+      const userDocSnap = await getDoc(userDocRef);
+      
+      let currentWishlist = [];
+      
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        currentWishlist = userData.wishlist || [];
+        console.log("Current wishlist:", currentWishlist);
+      } else {
+        console.log("User document doesn't exist yet, creating new one");
+      }
+      
+      let updatedWishlist;
+      if (currentWishlist.includes(product.id)) {
+        updatedWishlist = currentWishlist.filter(id => id !== product.id);
+        setIsAdded(false);
+        console.log("Removing from wishlist:", product.id);
+      } else {
+        updatedWishlist = [...currentWishlist, product.id];
+        setIsAdded(true);
+        console.log("Adding to wishlist:", product.id);
+      }
+      
+      console.log("Updated wishlist:", updatedWishlist);
+      console.log("Saving to Firestore...");
+      
+      await setDoc(userDocRef, {
+        name: user.displayName,
+        wishlist: updatedWishlist
+      }, { merge: true });
+      
+      console.log("Successfully saved to Firestore!");
+      
+    } catch (error) {
+      console.error("Error updating wishlist:", error);
+      console.error("Error details:", error.message);
+      alert("Failed to update wishlist. Please try again. Check console for details.");
     }
   };
 
@@ -156,7 +208,7 @@ const ProductPage = () => {
 
           <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between p-5 bg-gray-50 rounded-2xl border border-gray-100">
-              <span className="font-bold uppercase text-[10px] text-gray-400 tracking-widest">Minimum Order</span>
+              <span className="font-bold upperce text-[10px] text-gray-400 tracking-widest">Minimum Order</span>
               <span className="font-mono font-bold text-lg">{product.minQuantity || 1} Units</span>
             </div>
 
@@ -172,7 +224,7 @@ const ProductPage = () => {
             </button>
             
             <p className="text-[10px] text-center text-gray-400 uppercase tracking-widest">
-              Secure Checkout • 3D Printed on Demand
+              Secure Checkout âD Printed on Demand
             </p>
           </div>
         </div>
