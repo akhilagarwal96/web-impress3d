@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db, auth } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 
 const ProductPage = () => {
@@ -12,6 +13,8 @@ const ProductPage = () => {
   const [loading, setLoading] = useState(true);
   const [isAdded, setIsAdded] = useState(false);
   const [user, setUser] = useState(null);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -122,6 +125,35 @@ const ProductPage = () => {
     }
   };
 
+  const openLightbox = (index) => {
+    setCurrentImageIndex(index);
+    setLightboxOpen(true);
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+  };
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
+  };
+
+  const handleKeyDown = (e) => {
+    if (!lightboxOpen) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') nextImage();
+    if (e.key === 'ArrowLeft') prevImage();
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxOpen, currentImageIndex]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-white">
@@ -158,7 +190,11 @@ const ProductPage = () => {
         <div className="grid grid-cols-2 gap-4 auto-rows-min">
           {product.images.length > 0 ? (
             product.images.map((img, idx) => (
-              <div key={idx} className="aspect-square bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 group">
+              <button 
+                key={idx} 
+                onClick={() => openLightbox(idx)}
+                className="aspect-square bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 group cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
                 <img 
                   src={img} 
                   alt={`${product.name} view ${idx}`} 
@@ -167,7 +203,7 @@ const ProductPage = () => {
                     e.target.src = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400';
                   }}
                 />
-              </div>
+              </button>
             ))
           ) : (
             [1, 2, 3, 4].map((_, idx) => (
@@ -229,6 +265,79 @@ const ProductPage = () => {
           </div>
         </div>
       </main>
+
+      {/* LIGHTBOX MODAL */}
+      {lightboxOpen && product.images.length > 0 && (
+        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center">
+          {/* Close Button */}
+          <button 
+            onClick={closeLightbox}
+            className="absolute top-6 right-6 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors z-10"
+          >
+            <X size={28} className="text-white" />
+          </button>
+
+          {/* Image Counter */}
+          <div className="absolute top-6 left-6 text-white text-sm font-mono z-10">
+            {currentImageIndex + 1} / {product.images.length}
+          </div>
+
+          {/* Previous Button */}
+          {product.images.length > 1 && (
+            <button 
+              onClick={prevImage}
+              className="absolute left-6 p-4 bg-white/10 hover:bg-white/20 rounded-full transition-colors z-10"
+            >
+              <ChevronLeft size={32} className="text-white" />
+            </button>
+          )}
+
+          {/* Main Image */}
+          <div className="relative max-w-7xl max-h-[90vh] mx-auto px-24">
+            <img 
+              src={product.images[currentImageIndex]} 
+              alt={`${product.name} - Image ${currentImageIndex + 1}`}
+              className="max-w-full max-h-[90vh] w-auto h-auto object-contain mx-auto rounded-lg"
+              onError={(e) => {
+                e.target.src = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400';
+              }}
+            />
+          </div>
+
+          {/* Next Button */}
+          {product.images.length > 1 && (
+            <button 
+              onClick={nextImage}
+              className="absolute right-6 p-4 bg-white/10 hover:bg-white/20 rounded-full transition-colors z-10"
+            >
+              <ChevronRight size={32} className="text-white" />
+            </button>
+          )}
+
+          {/* Thumbnail Strip */}
+          {product.images.length > 1 && (
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 bg-black/50 p-3 rounded-full backdrop-blur-sm">
+              {product.images.map((img, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentImageIndex(idx)}
+                  className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                    idx === currentImageIndex 
+                      ? 'border-white scale-110' 
+                      : 'border-transparent opacity-60 hover:opacity-100'
+                  }`}
+                >
+                  <img 
+                    src={img} 
+                    alt={`Thumbnail ${idx + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
