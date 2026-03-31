@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from '../firebase';
+
 
 const CategoryPage = () => {
   const { categoryName } = useParams();
@@ -93,7 +94,11 @@ const CategoryPage = () => {
           <div className="flex flex-col gap-12">
             {products.length > 0 ? (
               products.map((product) => (
-                <div key={product.id} className="flex flex-col md:flex-row gap-8 items-start group">
+                <Link 
+                  key={product.id} 
+                  to={`/product/${product.id}`}
+                  className="flex flex-col md:flex-row gap-8 items-start group cursor-pointer hover:bg-gray-50 p-6 -m-6 rounded-2xl transition-all duration-300"
+                >
                   
                   {/* IMAGE CONTAINER */}
                   <div className="w-full md:w-64 aspect-square bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 flex-shrink-0 relative">
@@ -120,22 +125,13 @@ const CategoryPage = () => {
                     </p>
                     
                     <div className="flex items-center justify-between mt-auto">
-                      <div className="flex flex-col">
-                        <span className="text-2xl font-bold">₹{Number(product.price || 0).toLocaleString('en-IN')}</span>
-                      </div>
-                      
-                      <Link 
-                        to={`/product/${product.id}`} 
-                        className="px-8 py-3 bg-black text-white text-xs font-bold uppercase tracking-widest rounded-full hover:bg-blue-600 transition-all shadow-lg active:scale-95"
-                      >
-                        View Specs
-                      </Link>
+                      <span className="text-2xl font-bold">₹{Number(product.price || 0).toLocaleString('en-IN')}</span>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))
             ) : (
-              <div className="py-24 text-center text-gray-400 uppercase tracking-widest border-2 border-dashed border-gray-100 rounded-3xl">
+              <div className="py-24 text-center tt-gray-400 uppercase tracking-widest border-2 border-dashed border-gray-100 rounded-3xl">
                 No blueprints matched the "{categoryName}" filter.
               </div>
             )}
