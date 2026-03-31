@@ -27,7 +27,7 @@ const Footer = () => {
           <div className="flex flex-col">
             <h3 className="text-xs font-bold uppercase tracking-widest mb-6 text-gray-400">Follow Us</h3>
             <a 
-              href="https://instagram.com/impress3d.in" 
+              href="https://instagram.com/impress3d.co.in" 
               target="_blank" 
               rel="noopener noreferrer"
               className="flex items-center gap-3 text-white hover:text-pink-400 transition-colors group"
@@ -35,7 +35,7 @@ const Footer = () => {
               <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-pink-400/20 transition-colors">
                 <Instagram size={20} />
               </div>
-              <span className="text-lg">@impress3d.in</span>
+              <span className="text-lg">impress3d.contact@gmail.com</span>
             </a>
           </div>
 
@@ -43,7 +43,7 @@ const Footer = () => {
           <div className="flex flex-col">
             <h3 className="text-xs font-bold uppercase tracking-widest mb-6 text-gray-400">WhatsApp</h3>
             <a 
-              href="https://wa.me/919876543210" 
+              href="https://wa.me/918420640484" 
               target="_blank" 
               rel="noopener noreferrer"
               className="flex items-center gap-3 text-white hover:text-green-400 transition-colors group"
@@ -51,7 +51,7 @@ const Footer = () => {
               <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-green-400/20 transition-colors">
                 <MessageCircle size={20} />
               </div>
-              <span className="text-lg">+91 98765 43210</span>
+              <span className="text-lg">+91 84206 40484</span>
             </a>
           </div>
 
@@ -59,13 +59,13 @@ const Footer = () => {
           <div className="flex flex-col">
             <h3 className="text-xs font-bold uppercase tracking-widest mb-6 text-gray-400">Contact</h3>
             <a 
-              href="mailto:contact@impress3d.in" 
+              href="mailto:impress3d.contact@gmail.com" 
               className="flex items-center gap-3 text-white hover:text-blue-400 transition-colors group"
             >
               <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-blue-400/20 transition-colors">
                 <Mail size={20} />
               </div>
-              <span className="text-lg">contact@impress3d.in</span>
+              <span className="text-lg">impress3d.contact@gmail.com</span>
             </a>
           </div>
         </div>
