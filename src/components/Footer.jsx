@@ -10,11 +10,11 @@ const Footer = () => {
           {/* Logo Section */}
           <div className="flex flex-col items-start">
             <div className="flex items-center gap-3 mb-4">
-              <img src="/IMPRESS3D.png" alt="Impress3D Logo" className="h-16 w-auto object-contain" />
+              <img src="/IMPRESS3D.png" alt="Impress3D Logo" className="h-24 w-auto object-contain" />
             </div>
             <span 
-              className="text-4xl uppercase tracking-tighter mb-4" 
-              style={{ fontFamily: 'Impact, sans-serif' }}
+              className="text-4xl uppercase tracking-tighter mb-4 font-normal" 
+              style={{ fontFamily: 'Impact, sans-serif', fontWeight: '400' }}
             >
               Impress3D
             </span>
@@ -32,10 +32,10 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="flex items-center gap-3 text-white hover:text-pink-400 transition-colors group"
             >
-              <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-pink-400/20 transition-colors">
+              <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-pink-400/20 transition-colors flex-shrink-0">
                 <Instagram size={20} />
               </div>
-              <span className="text-lg">impress3d.contact@gmail.com</span>
+              <span className="text-lg">impress3d.co.in</span>
             </a>
           </div>
 
@@ -48,7 +48,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="flex items-center gap-3 text-white hover:text-green-400 transition-colors group"
             >
-              <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-green-400/20 transition-colors">
+              <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-green-400/20 transition-colors flex-shrink-0">
                 <MessageCircle size={20} />
               </div>
               <span className="text-lg">+91 84206 40484</span>
@@ -62,7 +62,7 @@ const Footer = () => {
               href="mailto:impress3d.contact@gmail.com" 
               className="flex items-center gap-3 text-white hover:text-blue-400 transition-colors group"
             >
-              <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-blue-400/20 transition-colors">
+              <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-blue-400/20 transition-colors flex-shrink-0">
                 <Mail size={20} />
               </div>
               <span className="text-lg">impress3d.contact@gmail.com</span>
