@@ -86,23 +86,23 @@ const CategoryPage = () => {
       </div>
 
       {/* PRODUCT LIST */}
-      <section className="px-6 py-10 max-w-5xl mx-auto">
+      <section className="px-6 py-10 max-w-7xl mx-auto">
         {loading ? (
           <div className="py-20 text-center animate-pulse uppercase tracking-widest text-gray-400">
             Syncing {categoryName} Assets...
           </div>
         ) : (
-          <div className="flex flex-col gap-12">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {products.length > 0 ? (
               products.map((product) => (
                 <Link 
                   key={product.id} 
                   to={`/product/${product.id}`}
-                  className="flex flex-col md:flex-row gap-8 items-start group cursor-pointer hover:bg-gray-50 p-6 -m-6 rounded-2xl transition-all duration-300"
+                  className="flex flex-col group cursor-pointer hover:bg-gray-50 p-3 -m-3 rounded-2xl transition-all duration-300"
                 >
                   
                   {/* IMAGE CONTAINER */}
-                  <div className="w-full md:w-64 aspect-square bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 flex-shrink-0 relative">
+                  <div className="w-full aspect-square bg-gray-50 rounded-xl overflow-hidden border border-gray-100 mb-3 relative">
                     <img 
                       src={product.images[0] || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400'}
                       alt={product.name} 
@@ -116,30 +116,24 @@ const CategoryPage = () => {
                   </div>
 
                   {/* CONTENT DETAILS */}
-                  <div className="flex flex-col py-2 flex-grow">
-                    <span className="text-xs font-mono text-gray-400 mb-1 tracking-tighter uppercase">SKU: {product.id}</span>
-                    <h2 className="text-3xl font-bold uppercase tracking-tight italic mb-3" style={{ fontFamily: 'Impact, sans-serif' }}>
+                  <div className="flex flex-col">
+                    <h2 className="text-base md:text-xl font-bold uppercase tracking-tight italic mb-2 line-clamp-2" style={{ fontFamily: 'Impact, sans-serif' }}>
                       {product.name}
                     </h2>
-                    <p className="text-gray-500 text-sm mb-6 leading-relaxed line-clamp-2">
-                      {product.description}
-                    </p>
                     
-                    <div className="flex items-center justify-between mt-auto">
-                      <span className="text-2xl font-bold">₹{Number(product.price || 0).toLocaleString('en-IN')}</span>
-                    </div>
+                    <span className="text-lg md:text-xl font-bold">₹{Number(product.price || 0).toLocaleString('en-IN')}</span>
                   </div>
                 </Link>
               ))
             ) : (
-              <div className="py-24 text-center tt-gray-400 uppercase tracking-widest border-2 border-dashed border-gray-100 rounded-3xl">
+              <div className="col-span-2 md:col-span-3 lg:col-span-4 py-24 text-center tt-gray-400 uppercase tracking-widest border-2 border-dashed border-gray-100 rounded-3xl">
                 No blueprints matched the "{categoryName}" filter.
               </div>
             )}
           </div>
         )}
       </section>
-
+      
       <Footer />
     </div>
   );
