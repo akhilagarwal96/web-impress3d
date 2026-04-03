@@ -179,7 +179,7 @@ const Homepage = () => {
                   style={{ 
                     fontFamily: 'Impact, sans-serif',
                     fontWeight: "400",
-                    letterSpacing: "0.02em"
+                    letterSpacing: "0.02em",
                     lineHeight: '1.2' 
                   }}
                 >
