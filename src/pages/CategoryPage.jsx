@@ -79,7 +79,7 @@ const CategoryPage = () => {
 
       {/* CATEGORY TITLE BANNER */}
       <div className="px-6 py-12 bg-gray-50 border-b border-gray-100">
-        <h1 className="text-6xl md:text-7xl font-black uppercase italic tracking-tighter" style={{ fontFamily: 'Impact, sans-serif' }}>
+        <h1 className="text-6xl md:text-7xl font-black uppercase italic tracking-normal" style={{ fontFamily: 'Impact, sans-serif' }}>
           {categoryName}
         </h1>
         <p className="text-sm font-mono text-gray-400 mt-2 tracking-widest uppercase">Catalog / {categoryName}</p>
@@ -117,7 +117,7 @@ const CategoryPage = () => {
 
                   {/* CONTENT DETAILS */}
                   <div className="flex flex-col">
-                    <h2 className="text-base md:text-xl font-bold uppercase tracking-tight italic mb-2 line-clamp-2" style={{ fontFamily: 'Impact, sans-serif' }}>
+                    <h2 className="text-base md:text-xl font-bold uppercase tracking-normal italic mb-2 line-clamp-2" style={{ fontFamily: 'Impact, sans-serif' }}>
                       {product.name}
                     </h2>
                     
