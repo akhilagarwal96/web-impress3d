@@ -96,7 +96,7 @@ const WishlistPage = () => {
       <Header />
       
       <div className="px-6 py-12 max-w-7xl mx-auto">
-        <h1 className="text-5xl md:text-7xl font-black uppercase italic mb-12 tracking-tighter" style={{ fontFamily: 'Impact, sans-serif' }}>
+        <h1 className="text-5xl md:text-7xl font-black uppercase italic mb-12 tracking-normal" style={{ fontFamily: 'Impact, sans-serif', fontWeight: "400", letterSpacing: "0.02em" }}>
           My Wishlist
         </h1>
 
@@ -134,7 +134,6 @@ const WishlistPage = () => {
 
                 <div className="flex flex-col flex-1">
                   <div className="flex justify-between items-start mb-2">
-                    <span className="text-[10px] font-mono text-gray-400 uppercase">SKU: {product.id.slice(0, 8)}</span>
                   </div>
                   
                   <h3 className="font-bold uppercase text-2xl leading-none mb-2 italic" style={{ fontFamily: 'Impact, sans-serif' }}>
