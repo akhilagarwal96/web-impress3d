@@ -76,8 +76,8 @@ const Header = () => {
           <Link to="/" className="flex items-center gap-3 group transition-transform active:scale-95">
             <img src="/IMPRESS3D.png" alt="Logo" className="h-8 w-auto object-contain" />
             <span 
-              className="text-2xl uppercase tracking-tighter" 
-              style={{ fontFamily: 'Impact, sans-serif' }}
+              className="text-2xl uppercase tracking-normal" 
+              style={{ fontFamily: 'Impact, sans-serif', fontWeight: "400", letterSpacing: "0.02em" }}
             >
               Impress3D
             </span>
