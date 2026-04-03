@@ -153,7 +153,7 @@ const Header = () => {
         <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
         <div className="relative w-80 h-full bg-white p-8 shadow-2xl overflow-y-auto">
           <div className="flex justify-between items-center mb-12">
-            <h2 className="text-3xl font-bold tracking-tight uppercase" style={{ fontFamily: 'Impact, sans-serif' }}>Categories</h2>
+            <h2 className="text-3xl font-bold tracking-normal uppercase" style={{ fontFamily: 'Impact, sans-serif' }}>Categories</h2>
             <button onClick={() => setSidebarOpen(false)} className="hover:rotate-90 transition-transform"><X size={28} /></button>
           </div>
           
