@@ -218,9 +218,6 @@ const ProductPage = () => {
         {/* RIGHT: TECHNICAL DETAILS */}
         <div className="flex flex-col">
           <div className="flex items-center gap-3 mb-4">
-            <span className="text-xs font-mono text-gray-400 uppercase tracking-widest">
-              SKU: {product.id}
-            </span>
             {product.tags.map((tag, i) => (
               <span key={i} className="px-2 py-0.5 bg-gray-100 text-[10px] font-bold uppercase tracking-tighter rounded text-gray-500">
                 {tag}
