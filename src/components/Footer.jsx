@@ -7,17 +7,18 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           
-          {/* Logo Section */}
           <div className="flex flex-col items-start">
-            <div className="flex items-center gap-3 mb-4">
-              <img src="/IMPRESS3D.png" alt="Impress3D Logo" className="h-24 w-auto object-contain" />
+            <div className="mb-4">
+              <img src="/IMPRESS3D.png" alt="Impress3D Logo" className="w-72 h-auto object-contain" />
             </div>
-            <span 
-              className="text-4xl uppercase tracking-tighter mb-4 font-normal" 
-              style={{ fontFamily: 'Impact, sans-serif', fontWeight: '400' }}
+          
+            <span
+              className="text-4xl uppercase tracking-normal mb-4"
+              style={{ fontFamily: "Impact, sans-serif", fontWeight: "400", letterSpacing: "0.02em" }}
             >
-              Impress3D
+              IMPRESS3D
             </span>
+          
             <p className="text-sm text-gray-400 tracking-wide">
               Design. Create. Impress.
             </p>
