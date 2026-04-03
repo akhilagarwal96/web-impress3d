@@ -79,8 +79,8 @@ const Homepage = () => {
             alt="Hero BG"
           />
           <div className="relative text-center text-white px-4 z-10">
-            <h1 className="text-5xl md:text-7xl mb-2 tracking-tight uppercase" style={{ fontFamily: 'Impact, sans-serif' }}>
-              Impress3D
+            <h1 className="text-5xl md:text-7xl mb-2 tracking-normal uppercase" style={{ fontFamily: 'Impact, sans-serif', fontWeight: "400", letterSpacing: "0.02em" }}>
+              IMPRESS3D
             </h1>
             <p className="text-sm md:text-base max-w-md mx-auto font-light tracking-[0.2em] uppercase opacity-80">
               DESIGN. CREATE. IMPRESS.
@@ -93,7 +93,7 @@ const Homepage = () => {
       <section className="px-6 py-4 relative">
         {/* Header: Improved spacing for mobile */}
         <div className="flex justify-between items-center mb-6"> 
-          <h3 className="text-xl md:text-2xl font-bold uppercase tracking-tighter pr-4">
+          <h3 className="text-xl md:text-2xl font-bold uppercase tracking-normal pr-4">
             Featured Products
           </h3>
           
@@ -131,12 +131,11 @@ const Homepage = () => {
                     <img 
                       src={product.images[0] || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400'} 
                       alt={product.name} 
-                      /* REMOVED grayscale AND group-hover:grayscale-0 CLASSES BELOW */
                       className="absolute inset-0 w-full h-full object-cover transition-all duration-500" 
                       onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400'; }}
                     />
                   </div>
-                  <h4 className="text-xl uppercase tracking-tight" style={{ fontFamily: 'Impact, sans-serif' }}>
+                  <h4 className="text-xl uppercase tracking-normal" style={{ fontFamily: 'Impact, sans-serif' }}>
                     {product.name}
                   </h4>
                 </Link>
@@ -154,7 +153,7 @@ const Homepage = () => {
       <section className="px-6 py-4 relative border-t border-gray-100 mt-8">
         {/* Header matched to Featured Products */}
         <div className="flex justify-between items-end mb-4">
-          <h3 className="text-2xl font-bold uppercase tracking-tighter">
+          <h3 className="text-xl md:text-2xl font-bold uppercase tracking-normal pr-4">
             Shop By Categories
           </h3>
           {/* Optional: Add a 'View All' or similar if you want to match the arrow spacing */}
@@ -179,6 +178,8 @@ const Homepage = () => {
                   className="text-xl md:text-2xl uppercase tracking-[0.15em] px-2" 
                   style={{ 
                     fontFamily: 'Impact, sans-serif',
+                    fontWeight: "400",
+                    letterSpacing: "0.02em"
                     lineHeight: '1.2' 
                   }}
                 >
