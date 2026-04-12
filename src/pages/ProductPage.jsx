@@ -234,15 +234,15 @@ const ProductPage = () => {
           </div>
 
           <div className="border-y border-gray-100 py-8 mb-8">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Description</h3>
-            <p className="text-gray-600 leading-relaxed whitespace-pre-line text-sm">
+            <h3 className="text-lg font-bold uppercase tracking-widest text-gray-400 mb-4">Description</h3>
+            <p className="text-gray-600 leading-relaxed whitespace-pre-line text-base">
               {product.description}
             </p>
           </div>
 
           <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between p-5 bg-gray-50 rounded-2xl border border-gray-100">
-              <span className="font-bold upperce text-[10px] text-gray-400 tracking-widest">Minimum Order</span>
+              <span className="font-bold uppercese text-lg text-gray-400 tracking-widest">Minimum Order</span>
               <span className="font-mono font-bold text-lg">{product.minQuantity || 1} Units</span>
             </div>
 
@@ -256,10 +256,6 @@ const ProductPage = () => {
             >
               {isAdded ? 'Remove from Wishlist' : 'Add to Wishlist'}
             </button>
-            
-            <p className="text-[10px] text-center text-gray-400 uppercase tracking-widest">
-              Secure Checkout âD Printed on Demand
-            </p>
           </div>
         </div>
       </main>
