@@ -13,7 +13,7 @@ const Footer = () => {
             </div>
           
             <span
-              className="text-4xl uppercase tracking-normal mb-4"
+              className="text-4xl uppercase tracking-normal mb-4 text-center"
               style={{ fontFamily: "Impact, sans-serif", fontWeight: "400", letterSpacing: "0.02em" }}
             >
               IMPRESS3D
