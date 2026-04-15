@@ -7,7 +7,6 @@ import { db, auth } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
-
 const ProductPage = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
@@ -17,6 +16,7 @@ const ProductPage = () => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  // ... (Keep your existing useEffects for auth and fetching)
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -30,7 +30,6 @@ const ProductPage = () => {
         }
       }
     });
-
     return () => unsubscribe();
   }, [productId]);
 
@@ -40,28 +39,15 @@ const ProductPage = () => {
       try {
         const docRef = doc(db, "products", productId);
         const docSnap = await getDoc(docRef);
-
         if (docSnap.exists()) {
           const data = docSnap.data();
-
-          // Convert "images" string to Array
           const imagesArray = data.images && typeof data.images === 'string'
             ? data.images.split(',').map(url => url.trim()).filter(Boolean)
             : Array.isArray(data.images) ? data.images : [];
-
-          // Convert "tags" string to Array
           const tagsArray = data.tags && typeof data.tags === 'string'
             ? data.tags.split(',').map(tag => tag.trim().toLowerCase()).filter(Boolean)
             : Array.isArray(data.tags) ? data.tags : [];
-
-          setProduct({ 
-            id: docSnap.id, 
-            ...data, 
-            images: imagesArray, 
-            tags: tagsArray 
-          });
-        } else {
-          console.log("No such product!");
+          setProduct({ id: docSnap.id, ...data, images: imagesArray, tags: tagsArray });
         }
       } catch (error) {
         console.error("Error fetching product:", error);
@@ -69,7 +55,6 @@ const ProductPage = () => {
         setLoading(false);
       }
     };
-
     fetchProduct();
     window.scrollTo(0, 0);
   }, [productId]);
@@ -79,50 +64,17 @@ const ProductPage = () => {
       alert("Please sign in to add items to your wishlist");
       return;
     }
-
-    console.log("User:", user.email);
-    console.log("Product ID:", product.id);
-
     try {
       const userDocRef = doc(db, "users", user.email);
-      console.log("Fetching user document...");
       const userDocSnap = await getDoc(userDocRef);
-      
-      let currentWishlist = [];
-      
-      if (userDocSnap.exists()) {
-        const userData = userDocSnap.data();
-        currentWishlist = userData.wishlist || [];
-        console.log("Current wishlist:", currentWishlist);
-      } else {
-        console.log("User document doesn't exist yet, creating new one");
-      }
-      
-      let updatedWishlist;
-      if (currentWishlist.includes(product.id)) {
-        updatedWishlist = currentWishlist.filter(id => id !== product.id);
-        setIsAdded(false);
-        console.log("Removing from wishlist:", product.id);
-      } else {
-        updatedWishlist = [...currentWishlist, product.id];
-        setIsAdded(true);
-        console.log("Adding to wishlist:", product.id);
-      }
-      
-      console.log("Updated wishlist:", updatedWishlist);
-      console.log("Saving to Firestore...");
-      
-      await setDoc(userDocRef, {
-        name: user.displayName,
-        wishlist: updatedWishlist
-      }, { merge: true });
-      
-      console.log("Successfully saved to Firestore!");
-      
+      let currentWishlist = userDocSnap.exists() ? (userDocSnap.data().wishlist || []) : [];
+      let updatedWishlist = currentWishlist.includes(product.id)
+        ? currentWishlist.filter(id => id !== product.id)
+        : [...currentWishlist, product.id];
+      setIsAdded(!currentWishlist.includes(product.id));
+      await setDoc(userDocRef, { name: user.displayName, wishlist: updatedWishlist }, { merge: true });
     } catch (error) {
       console.error("Error updating wishlist:", error);
-      console.error("Error details:", error.message);
-      alert("Failed to update wishlist. Please try again. Check console for details.");
     }
   };
 
@@ -130,202 +82,126 @@ const ProductPage = () => {
     setCurrentImageIndex(index);
     setLightboxOpen(true);
   };
+  const closeLightbox = () => setLightboxOpen(false);
+  const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
+  const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
 
-  const closeLightbox = () => {
-    setLightboxOpen(false);
-  };
-
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
-  };
-
-  const handleKeyDown = (e) => {
-    if (!lightboxOpen) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowRight') nextImage();
-    if (e.key === 'ArrowLeft') prevImage();
-  };
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lightboxOpen, currentImageIndex]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white">
-        <Header />
-        <div className="flex items-center justify-center h-[60vh]">
-          <div className="animate-pulse text-xl font-mono uppercase tracking-widest text-gray-400">
-            Analyzing Component...
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!product) {
-    return (
-      <div className="min-h-screen bg-white">
-        <Header />
-        <div className="flex items-center justify-center h-[60vh]">
-          <h1 className="text-2xl font-black uppercase italic" style={{ fontFamily: 'Impact' }}>
-            Product Not Found
-          </h1>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <div className="min-h-screen bg-white"><Header /><div className="flex items-center justify-center h-[60vh] animate-pulse uppercase tracking-widest text-gray-400">Analyzing...</div></div>;
+  if (!product) return <div className="min-h-screen bg-white"><Header /><div className="flex items-center justify-center h-[60vh] uppercase font-black italic" style={{ fontFamily: 'Impact' }}>Not Found</div></div>;
 
   return (
     <div className="min-h-screen bg-white">
       <Header />
 
-      <main className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-2 gap-12">
-        
-        {/* LEFT: IMAGE GRID */}
-        <div className="grid grid-cols-2 gap-4 auto-rows-min">
-          {product.images.length > 0 ? (
-            product.images.map((img, idx) => (
-              <button 
-                key={idx} 
-                onClick={() => openLightbox(idx)}
-                className="aspect-square bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 group cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <img 
-                  src={img} 
-                  alt={`${product.name} view ${idx}`} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                  onError={(e) => {
-                    e.target.src = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400';
-                  }}
-                />
-              </button>
-            ))
-          ) : (
-            [1, 2, 3, 4].map((_, idx) => (
-              <div key={idx} className="aspect-square bg-gray-50 rounded-2xl flex items-center justify-center border border-dashed border-gray-200">
-                <span className="text-[10px] uppercase font-mono text-gray-400">No Image {idx + 1}</span>
-              </div>
-            ))
-          )}
-        </div>
-
-        {/* RIGHT: TECHNICAL DETAILS */}
-        <div className="flex flex-col">
-          <div className="flex items-center gap-3 mb-4">
-            {product.tags.map((tag, i) => (
-              <span key={i} className="px-2 py-0.5 bg-gray-100 text-[10px] font-bold uppercase tracking-normal rounded text-gray-500">
-                {tag}
-              </span>
-            ))}
-          </div>
+      <main className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
           
-          <h1 className="text-5xl md:text-6xl font-black uppercase italic leading-none mb-6" style={{ fontFamily: 'Impact, sans-serif' }}>
-            {product.name}
-          </h1>
-
-          <div className="flex items-baseline gap-4 mb-8">
-            <span className="text-4xl font-bold">₹{Number(product.price || 0).toLocaleString('en-IN')}</span>
+          {/* LEFT: IMAGE GRID (Mobile: Single Column / Desktop: Two Columns) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 auto-rows-min order-1 lg:order-1">
+            {product.images.length > 0 ? (
+              product.images.map((img, idx) => (
+                <button 
+                  key={idx} 
+                  onClick={() => openLightbox(idx)}
+                  className="aspect-square bg-gray-50 rounded-xl md:rounded-2xl overflow-hidden border border-gray-100 group cursor-pointer focus:outline-none"
+                >
+                  <img 
+                    src={img} 
+                    alt={`${product.name} view ${idx}`} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                  />
+                </button>
+              ))
+            ) : (
+               <div className="aspect-square bg-gray-50 rounded-xl flex items-center justify-center border border-dashed border-gray-200 uppercase text-[10px] font-mono text-gray-400">No Image</div>
+            )}
           </div>
 
-          <div className="border-y border-gray-100 py-8 mb-8">
-            <h3 className="text-lg font-bold uppercase tracking-widest text-gray-400 mb-4">Description</h3>
-            <p className="text-gray-600 leading-relaxed whitespace-pre-line text-base">
-              {product.description}
-            </p>
-          </div>
+          {/* RIGHT: TECHNICAL DETAILS (Adjusted font sizes for mobile) */}
+          <div className="flex flex-col order-2 lg:order-2">
+            <div className="flex items-center gap-2 mb-3">
+              {product.tags.map((tag, i) => (
+                <span key={i} className="px-2 py-0.5 bg-gray-100 text-[9px] md:text-[10px] font-bold uppercase rounded text-gray-500">
+                  {tag}
+                </span>
+              ))}
+            </div>
+            
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-black uppercase italic leading-none mb-4 md:mb-6" style={{ fontFamily: 'Impact, sans-serif' }}>
+              {product.name}
+            </h1>
 
-          <div className="flex flex-col gap-6">
-            <div className="flex items-center justify-between p-5 bg-gray-50 rounded-2xl border border-gray-100">
-              <span className="font-bold uppercese text-lg text-gray-400 tracking-widest">Minimum Order</span>
-              <span className="font-mono font-bold text-lg">{product.minQuantity || 1} Units</span>
+            <div className="flex items-baseline gap-4 mb-6 md:mb-8">
+              <span className="text-3xl md:text-4xl font-bold">₹{Number(product.price || 0).toLocaleString('en-IN')}</span>
             </div>
 
-            <button 
-              onClick={addToWishlist}
-              className={`w-full py-5 font-bold uppercase tracking-[0.2em] rounded-full transition-all active:scale-95 shadow-xl shadow-black/5 text-xs ${
-                isAdded 
-                ? 'bg-red-500 text-white hover:bg-red-600' 
-                : 'bg-black text-white hover:bg-blue-600'
-              }`}
-            >
-              {isAdded ? 'Remove from Wishlist' : 'Add to Wishlist'}
-            </button>
+            <div className="border-y border-gray-100 py-6 md:py-8 mb-6 md:mb-8">
+              <h3 className="text-sm md:text-lg font-bold uppercase tracking-widest text-gray-400 mb-3 md:mb-4">Description</h3>
+              <p className="text-gray-600 leading-relaxed whitespace-pre-line text-sm md:text-base">
+                {product.description}
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-4 md:gap-6">
+              <div className="flex items-center justify-between p-4 md:p-5 bg-gray-50 rounded-xl md:rounded-2xl border border-gray-100">
+                <span className="font-bold uppercase text-xs md:text-lg text-gray-400 tracking-widest">Min. Order</span>
+                <span className="font-mono font-bold text-base md:text-lg">{product.minQuantity || 1} Units</span>
+              </div>
+
+              <button 
+                onClick={addToWishlist}
+                className={`w-full py-4 md:py-5 font-bold uppercase tracking-[0.2em] rounded-full transition-all active:scale-95 shadow-md text-[10px] md:text-xs ${
+                  isAdded ? 'bg-red-500 text-white' : 'bg-black text-white'
+                }`}
+              >
+                {isAdded ? 'Remove from Wishlist' : 'Add to Wishlist'}
+              </button>
+            </div>
           </div>
         </div>
       </main>
 
-      {/* LIGHTBOX MODAL */}
+      {/* LIGHTBOX MODAL (Optimized for Mobile) */}
       {lightboxOpen && product.images.length > 0 && (
-        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center">
-          {/* Close Button */}
-          <button 
-            onClick={closeLightbox}
-            className="absolute top-6 right-6 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors z-10"
-          >
-            <X size={28} className="text-white" />
+        <div className="fixed inset-0 z-[100] bg-black/95 flex flex-col items-center justify-center p-4">
+          {/* Close Button - Moved slightly for easier thumb reach */}
+          <button onClick={closeLightbox} className="absolute top-4 right-4 p-2 bg-white/10 rounded-full z-[110]">
+            <X size={24} className="text-white" />
           </button>
 
-          {/* Image Counter */}
-          <div className="absolute top-6 left-6 text-white text-sm font-mono z-10">
-            {currentImageIndex + 1} / {product.images.length}
-          </div>
+          {/* Main Image Container - Full width on mobile */}
+          <div className="relative w-full h-full flex items-center justify-center">
+            {product.images.length > 1 && (
+              <button onClick={prevImage} className="absolute left-0 p-2 bg-white/5 rounded-full z-10 md:left-4">
+                <ChevronLeft size={24} className="text-white md:w-8 md:h-8" />
+              </button>
+            )}
 
-          {/* Previous Button */}
-          {product.images.length > 1 && (
-            <button 
-              onClick={prevImage}
-              className="absolute left-6 p-4 bg-white/10 hover:bg-white/20 rounded-full transition-colors z-10"
-            >
-              <ChevronLeft size={32} className="text-white" />
-            </button>
-          )}
-
-          {/* Main Image */}
-          <div className="relative max-w-7xl max-h-[90vh] mx-auto px-24">
             <img 
               src={product.images[currentImageIndex]} 
-              alt={`${product.name} - Image ${currentImageIndex + 1}`}
-              className="max-w-full max-h-[90vh] w-auto h-auto object-contain mx-auto rounded-lg"
-              onError={(e) => {
-                e.target.src = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400';
-              }}
+              className="max-w-full max-h-[70vh] object-contain rounded-md"
+              alt="Lightbox"
             />
+
+            {product.images.length > 1 && (
+              <button onClick={nextImage} className="absolute right-0 p-2 bg-white/5 rounded-full z-10 md:right-4">
+                <ChevronRight size={24} className="text-white md:w-8 md:h-8" />
+              </button>
+            )}
           </div>
 
-          {/* Next Button */}
+          {/* Thumbnail Strip - Scaled down for mobile */}
           {product.images.length > 1 && (
-            <button 
-              onClick={nextImage}
-              className="absolute right-6 p-4 bg-white/10 hover:bg-white/20 rounded-full transition-colors z-10"
-            >
-              <ChevronRight size={32} className="text-white" />
-            </button>
-          )}
-
-          {/* Thumbnail Strip */}
-          {product.images.length > 1 && (
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 bg-black/50 p-3 rounded-full backdrop-blur-sm">
+            <div className="mt-4 flex gap-2 p-2 bg-white/5 rounded-xl backdrop-blur-sm overflow-x-auto max-w-full">
               {product.images.map((img, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCurrentImageIndex(idx)}
-                  className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
-                    idx === currentImageIndex 
-                      ? 'border-white scale-110' 
-                      : 'border-transparent opacity-60 hover:opacity-100'
+                  className={`flex-shrink-0 w-12 h-12 md:w-16 md:h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                    idx === currentImageIndex ? 'border-white' : 'border-transparent opacity-50'
                   }`}
                 >
-                  <img 
-                    src={img} 
-                    alt={`Thumbnail ${idx + 1}`}
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={img} className="w-full h-full object-cover" alt="Thumb" />
                 </button>
               ))}
             </div>
