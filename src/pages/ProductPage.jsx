@@ -134,7 +134,7 @@ const ProductPage = () => {
 
       <main className="max-w-7xl mx-auto px-6 py-8 md:py-12 grid grid-cols-1 lg:grid-cols-2 gap-12">
         
-        {/* LEFT: IMAGE GRID (Reverted to original 2-column layout) */}
+        {/* LEFT: IMAGE GRID */}
         <div className="grid grid-cols-2 gap-4 auto-rows-min">
           {product.images.length > 0 ? (
             product.images.map((img, idx) => (
@@ -147,14 +147,11 @@ const ProductPage = () => {
                   src={img} 
                   alt={`${product.name} view ${idx}`} 
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                  onError={(e) => { e.target.src = 'https://via.placeholder.com/400'; }}
                 />
               </button>
             ))
           ) : (
-            [1, 2, 3, 4].map((_, idx) => (
-              <div key={idx} className="aspect-square bg-gray-50 rounded-2xl flex items-center justify-center border border-dashed border-gray-200 text-[10px] uppercase font-mono text-gray-400">No Image {idx + 1}</div>
-            ))
+            <div className="aspect-square bg-gray-50 rounded-2xl flex items-center justify-center border border-dashed border-gray-200 text-[10px] uppercase font-mono text-gray-400">No Image</div>
           )}
         </div>
 
@@ -176,14 +173,28 @@ const ProductPage = () => {
             <span className="text-3xl md:text-4xl font-bold">₹{Number(product.price || 0).toLocaleString('en-IN')}</span>
           </div>
 
-          <div className="border-y border-gray-100 py-6 md:py-8 mb-8">
+          {/* DESCRIPTION SECTION */}
+          <div className="border-t border-gray-100 pt-6 md:pt-8 mb-6">
             <h3 className="text-sm md:text-lg font-bold uppercase tracking-widest text-gray-400 mb-4">Description</h3>
             <p className="text-gray-600 leading-relaxed whitespace-pre-line text-sm md:text-base">
               {product.description}
             </p>
           </div>
 
-          <div className="flex flex-col gap-6">
+          {/* NEW SIZE SECTION */}
+          <div className="mb-8">
+            <h3 className="text-sm md:text-lg font-bold uppercase tracking-widest text-gray-400 mb-2">Size (mm)</h3>
+            <p className="text-gray-600 text-sm md:text-base font-mono">
+              {product.size || "Standard"}
+            </p>
+          </div>
+
+          {/* PRICING NOTE */}
+          <p className="text-[10px] md:text-xs text-gray-400 italic mb-8">
+            * Prices may vary based on colour and customized size orders
+          </p>
+
+          <div className="flex flex-col gap-6 border-t border-gray-100 pt-8">
             <div className="flex items-center justify-between p-5 bg-gray-50 rounded-2xl border border-gray-100">
               <span className="font-bold uppercase text-xs md:text-lg text-gray-400 tracking-widest">Minimum Order</span>
               <span className="font-mono font-bold text-base md:text-lg">{product.minQuantity || 1} Units</span>
@@ -201,7 +212,7 @@ const ProductPage = () => {
         </div>
       </main>
 
-      {/* LIGHTBOX MODAL (Optimized Image Size) */}
+      {/* LIGHTBOX MODAL */}
       {lightboxOpen && product.images.length > 0 && (
         <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-4">
           <button onClick={closeLightbox} className="absolute top-6 right-6 p-3 bg-white/10 rounded-full z-50">
@@ -227,22 +238,6 @@ const ProductPage = () => {
               </button>
             )}
           </div>
-
-          {product.images.length > 1 && (
-            <div className="mt-4 flex gap-2 p-2 bg-white/5 rounded-xl overflow-x-auto max-w-full">
-              {product.images.map((img, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setCurrentImageIndex(idx)}
-                  className={`flex-shrink-0 w-12 h-12 md:w-16 md:h-16 rounded-lg overflow-hidden border-2 transition-all ${
-                    idx === currentImageIndex ? 'border-white' : 'border-transparent opacity-50'
-                  }`}
-                >
-                  <img src={img} className="w-full h-full object-cover" alt="Thumb" />
-                </button>
-              ))}
-            </div>
-          )}
         </div>
       )}
 
