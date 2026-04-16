@@ -175,17 +175,25 @@ const ProductPage = () => {
 
           {/* DESCRIPTION SECTION */}
           <div className="border-t border-gray-100 pt-6 md:pt-8 mb-6">
-            <h3 className="text-sm md:text-lg font-bold uppercase tracking-widest text-gray-400 mb-4">Description</h3>
+            <h3 className="text-sm md:text-lg font-bold uppercase tracking-widest text-gray-400 mb-3 md:mb-4">Description</h3>
             <p className="text-gray-600 leading-relaxed whitespace-pre-line text-sm md:text-base">
               {product.description}
             </p>
           </div>
 
-          {/* NEW SIZE SECTION */}
-          <div className="mb-8">
+          {/* SIZE SECTION */}
+          <div className="mb-6">
             <h3 className="text-sm md:text-lg font-bold uppercase tracking-widest text-gray-400 mb-2">Size (mm)</h3>
             <p className="text-gray-600 text-sm md:text-base font-mono">
-              {product.size || "Standard"}
+              {product.size || "Standard Dimensions"}
+            </p>
+          </div>
+
+          {/* MATERIAL & CARE SECTION */}
+          <div className="mb-8">
+            <h3 className="text-sm md:text-lg font-bold uppercase tracking-widest text-gray-400 mb-2">Material & Care</h3>
+            <p className="text-gray-600 text-sm md:text-base">
+              {product.material || "Eco-friendly PLA plastic. Wipe clean with a damp cloth."}
             </p>
           </div>
 
