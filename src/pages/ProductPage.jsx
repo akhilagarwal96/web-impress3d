@@ -16,7 +16,8 @@ const ProductPage = () => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const defaultMaterialCare = "Crafted from eco-friendly, high-strength PLA plastic. To maintain its finish, wipe gently with a damp cloth. Avoid prolonged exposure to direct high heat (above 50°C) to prevent warping.";
+  // Default Material & Care text
+  const defaultMaterialCare = "Eco-friendly PLA plastic. Wipe clean with a damp cloth.";
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -171,9 +172,8 @@ const ProductPage = () => {
             <span className="text-3xl md:text-4xl font-bold">₹{Number(product.price || 0).toLocaleString('en-IN')}</span>
           </div>
 
-          {/* ALIGNED CONTENT AREA */}
           <div className="space-y-8">
-            {/* DESCRIPTION */}
+            {/* DESCRIPTION SECTION */}
             <div className="border-t border-gray-100 pt-8">
               <h3 className="text-sm md:text-lg font-bold uppercase tracking-widest text-gray-400 mb-4">Description</h3>
               <p className="text-gray-600 leading-relaxed whitespace-pre-line text-sm md:text-base">
@@ -181,7 +181,7 @@ const ProductPage = () => {
               </p>
             </div>
 
-            {/* SIZE */}
+            {/* SIZE SECTION */}
             <div>
               <h3 className="text-sm md:text-lg font-bold uppercase tracking-widest text-gray-400 mb-2">Size (mm)</h3>
               <p className="text-gray-600 text-sm md:text-base font-mono">
@@ -189,7 +189,7 @@ const ProductPage = () => {
               </p>
             </div>
 
-            {/* MATERIAL & CARE - INDENTED RIGHT */}
+            {/* DYNAMIC MATERIAL & CARE SECTION - Indented right in grey box */}
             <div className="ml-5 p-5 bg-gray-50 rounded-2xl border border-gray-100">
               <h3 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-3 flex items-center gap-2">
                 <ShieldCheck size={16} /> Material & Care
@@ -237,7 +237,7 @@ const ProductPage = () => {
             )}
             <img 
               src={product.images[currentImageIndex]} 
-              className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
+              className="max-w-full max-h-[85vh] object-contain rounded-lg"
               alt="View"
             />
             {product.images.length > 1 && (
