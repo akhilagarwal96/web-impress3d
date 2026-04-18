@@ -184,6 +184,14 @@ const ProductPage = () => {
             </p>
           </div>
 
+          {/* SIZE SECTION */}
+          <div className="mb-6 px-5">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-2">Size (mm)</h3>
+            <p className="text-gray-600 text-sm md:text-base font-mono">
+              {product.size || "Standard Dimensions"}
+            </p>
+          </div>
+
           {/* DYNAMIC MATERIAL & CARE SECTION */}
           <div className="mb-6 p-5 bg-gray-50 rounded-2xl border border-gray-100">
             <h3 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-3 flex items-center gap-2">
@@ -191,14 +199,6 @@ const ProductPage = () => {
             </h3>
             <p className="text-gray-600 text-sm md:text-base leading-relaxed">
               {product.materialCare || defaultMaterialCare}
-            </p>
-          </div>
-
-          {/* SIZE SECTION */}
-          <div className="mb-6 px-5">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-2">Size (mm)</h3>
-            <p className="text-gray-600 text-sm md:text-base font-mono">
-              {product.size || "Standard Dimensions"}
             </p>
           </div>
 
