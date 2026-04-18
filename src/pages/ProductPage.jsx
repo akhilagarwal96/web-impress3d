@@ -5,7 +5,7 @@ import Footer from '../components/Footer';
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db, auth } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, ShieldCheck, ThermometerSnowflake } from 'lucide-react';
 
 const ProductPage = () => {
   const { productId } = useParams();
@@ -15,6 +15,9 @@ const ProductPage = () => {
   const [user, setUser] = useState(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Default Material & Care content
+  const defaultMaterialCare = "Crafted from eco-friendly, high-strength PLA plastic. To maintain its finish, wipe gently with a damp cloth. Avoid prolonged exposure to direct high heat (above 50°C) to prevent warping.";
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -123,7 +126,7 @@ const ProductPage = () => {
     return (
       <div className="min-h-screen bg-white">
         <Header />
-        <div className="flex items-center justify-center h-[60vh] font-black uppercase italic" style={{ fontFamily: 'Impact' }}>Product Not Found</div>
+        <div className="flex items-center justify-center h-[60vh] font-black uppercase italic text-4xl" style={{ fontFamily: 'Impact' }}>Product Not Found</div>
       </div>
     );
   }
@@ -181,24 +184,26 @@ const ProductPage = () => {
             </p>
           </div>
 
+          {/* DYNAMIC MATERIAL & CARE SECTION */}
+          <div className="mb-6 p-5 bg-gray-50 rounded-2xl border border-gray-100">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-3 flex items-center gap-2">
+              <ShieldCheck size={16} /> Material & Care
+            </h3>
+            <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+              {product.materialCare || defaultMaterialCare}
+            </p>
+          </div>
+
           {/* SIZE SECTION */}
-          <div className="mb-6">
-            <h3 className="text-sm md:text-lg font-bold uppercase tracking-widest text-gray-400 mb-2">Size (mm)</h3>
+          <div className="mb-6 px-5">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-2">Size (mm)</h3>
             <p className="text-gray-600 text-sm md:text-base font-mono">
               {product.size || "Standard Dimensions"}
             </p>
           </div>
 
-          {/* MATERIAL & CARE SECTION */}
-          <div className="mb-8">
-            <h3 className="text-sm md:text-lg font-bold uppercase tracking-widest text-gray-400 mb-2">Material & Care</h3>
-            <p className="text-gray-600 text-sm md:text-base">
-              {product.material || "Eco-friendly PLA plastic. Wipe clean with a damp cloth."}
-            </p>
-          </div>
-
           {/* PRICING NOTE */}
-          <p className="text-[10px] md:text-xs text-gray-400 italic mb-8">
+          <p className="px-5 text-[10px] md:text-xs text-gray-400 italic mb-8">
             * Prices may vary based on colour and customized size orders
           </p>
 
@@ -223,25 +228,25 @@ const ProductPage = () => {
       {/* LIGHTBOX MODAL */}
       {lightboxOpen && product.images.length > 0 && (
         <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-4">
-          <button onClick={closeLightbox} className="absolute top-6 right-6 p-3 bg-white/10 rounded-full z-50">
+          <button onClick={closeLightbox} className="absolute top-6 right-6 p-3 bg-white/10 rounded-full z-50 hover:bg-white/20 transition-colors">
             <X size={24} className="text-white" />
           </button>
 
           <div className="relative w-full h-full flex items-center justify-center">
             {product.images.length > 1 && (
-              <button onClick={prevImage} className="absolute left-2 md:left-6 p-3 bg-white/10 rounded-full z-50">
+              <button onClick={prevImage} className="absolute left-2 md:left-6 p-3 bg-white/10 rounded-full z-50 hover:bg-white/20">
                 <ChevronLeft size={24} className="text-white md:w-8 md:h-8" />
               </button>
             )}
 
             <img 
               src={product.images[currentImageIndex]} 
-              className="max-w-full max-h-[75vh] object-contain rounded-lg"
+              className="max-w-full max-h-[85vh] object-contain rounded-lg"
               alt="View"
             />
 
             {product.images.length > 1 && (
-              <button onClick={nextImage} className="absolute right-2 md:right-6 p-3 bg-white/10 rounded-full z-50">
+              <button onClick={nextImage} className="absolute right-2 md:right-6 p-3 bg-white/10 rounded-full z-50 hover:bg-white/20">
                 <ChevronRight size={24} className="text-white md:w-8 md:h-8" />
               </button>
             )}
