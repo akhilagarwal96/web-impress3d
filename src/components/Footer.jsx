@@ -60,13 +60,13 @@ const Footer = () => {
           <div className="flex flex-col">
             <h3 className="text-xs font-bold uppercase tracking-widest mb-6 text-gray-400">Contact</h3>
             <a 
-              href="mailto:impress3d.contact@gmail.com" 
+              href="mailto:support@impress3d.co.in" 
               className="flex items-center gap-3 text-white hover:text-blue-400 transition-colors group"
             >
               <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-blue-400/20 transition-colors flex-shrink-0">
                 <Mail size={20} />
               </div>
-              <span className="text-lg">impress3d.contact@gmail.com</span>
+              <span className="text-lg">support@impress3d.co.in</span>
             </a>
           </div>
         </div>
