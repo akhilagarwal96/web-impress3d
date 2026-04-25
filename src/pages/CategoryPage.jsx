@@ -94,7 +94,7 @@ const CategoryPage = ({ onProfileClick }) => {
       {/* CATEGORY TITLE BANNER */}
       <div className="px-6 py-12 bg-gray-50 border-b border-gray-100">
         <h1 className="text-6xl md:text-7xl font-black uppercase italic tracking-normal" style={{ fontFamily: 'Impact, sans-serif' }}>
-          {categoryName?.toLowerCase() === 'all' ? 'All Blueprints' : categoryName}
+          {categoryName?.toLowerCase() === 'all' ? 'All Products' : categoryName}
         </h1>
         <p className="text-sm font-mono text-gray-400 mt-2 tracking-widest uppercase">
           Catalog / {categoryName}
