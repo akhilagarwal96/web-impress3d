@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Instagram, Mail, MessageCircle } from 'lucide-react';
 
 const Footer = () => {
@@ -7,6 +8,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           
+          {/* Logo & Brand Section */}
           <div className="flex flex-col items-start">
             <div className="mb-4">
               <img src="/IMPRESS3D.png" alt="Impress3D Logo" className="w-72 h-auto object-contain" />
@@ -19,9 +21,20 @@ const Footer = () => {
               IMPRESS3D
             </span>
           
-            <p className="text-sm text-gray-400 tracking-wide">
+            <p className="text-sm text-gray-400 tracking-wide mb-6">
               Design. Create. Impress.
             </p>
+
+            {/* Legal Links Integration */}
+            <div className="flex flex-col gap-2 border-t border-gray-800 pt-6 w-full">
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-2">Internal</h3>
+              <Link to="/privacy" className="text-xs uppercase font-bold text-gray-400 hover:text-white transition-colors">
+                Privacy Policy
+              </Link>
+              <span className="text-xs uppercase font-bold text-gray-700 cursor-not-allowed">
+                Terms of Service
+              </span>
+            </div>
           </div>
 
           {/* Instagram */}
@@ -66,7 +79,7 @@ const Footer = () => {
               <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-blue-400/20 transition-colors flex-shrink-0">
                 <Mail size={20} />
               </div>
-              <span className="text-lg">support@impress3d.co.in</span>
+              <span className="text-lg truncate">support@impress3d.co.in</span>
             </a>
           </div>
         </div>
