@@ -41,11 +41,11 @@ const PrivacyPolicy = () => {
             </p>
           </section>
 
-          <section className="bg-gray-50 p-8 rounded-2xl border border-gray-100">
+          <section className="bg-gray-50 rounded-2xl border border-gray-100">
             <h2 className="text-xl font-bold uppercase tracking-widest text-black mb-4">04. Contact</h2>
             <p className="text-gray-600">
               Questions regarding our privacy protocols? <br />
-              <span className="font-bold text-black uppercase mt-2 block">support@impress3d.com</span>
+              <span className="font-bold text-black uppercase mt-2 block">support@impress3d.co.in</span>
             </p>
           </section>
         </div>
