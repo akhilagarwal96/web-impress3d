@@ -194,7 +194,7 @@ const ProductPage = () => {
               </p>
             </div>
 
-            {/* DYNAMIC MATERIAL & CARE SECTION - Indented right in grey box */}
+            {/* DYNAMIC MATERIAL & CARE SECTION */}
             <div className="p-5 bg-gray-50 rounded-2xl border border-gray-100">
               <h3 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-3 flex items-center gap-2">
                 <ShieldCheck size={16} /> Material & Care
