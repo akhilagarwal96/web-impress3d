@@ -172,6 +172,11 @@ const ProductPage = () => {
             <span className="text-3xl md:text-4xl font-bold">₹{Number(product.price || 0).toLocaleString('en-IN')}</span>
           </div>
 
+          <div className="flex items-center justify-between p-5 bg-gray-50 rounded-2xl border border-gray-100">
+            <span className="font-bold uppercase text-xs md:text-lg text-gray-400 tracking-widest">Minimum Order</span>
+            <span className="font-mono font-bold text-base md:text-lg">{product.minQuantity || 1} Units</span>
+          </div>
+
           <div className="space-y-8">
             {/* DESCRIPTION SECTION */}
             <div className="border-t border-gray-100 pt-8">
@@ -206,11 +211,6 @@ const ProductPage = () => {
           </div>
 
           <div className="flex flex-col gap-6 border-t border-gray-100 mt-8 pt-8">
-            <div className="flex items-center justify-between p-5 bg-gray-50 rounded-2xl border border-gray-100">
-              <span className="font-bold uppercase text-xs md:text-lg text-gray-400 tracking-widest">Minimum Order</span>
-              <span className="font-mono font-bold text-base md:text-lg">{product.minQuantity || 1} Units</span>
-            </div>
-
             <button 
               onClick={addToWishlist}
               className={`w-full py-4 md:py-5 font-bold uppercase tracking-[0.2em] rounded-full transition-all active:scale-95 shadow-md text-[10px] md:text-xs ${
