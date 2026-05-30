@@ -8,24 +8,21 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           
-          {/* Logo & Brand Section */}
-          <div className="flex flex-col items-start">
-            <div className="mb-4">
-              <img src="/IMPRESS3D.png" alt="Impress3D Logo" className="w-72 h-auto object-contain" />
-            </div>
-          
+          {/* Updated Logo & Brand Section */}
+          <div className="flex flex-col items-start gap-0.5">
             <span
-              className="text-4xl uppercase tracking-normal mb-4 text-center"
+              className="text-4xl uppercase tracking-normal mb-1"
               style={{ fontFamily: "Impact, sans-serif", fontWeight: "400", letterSpacing: "0.02em" }}
             >
               IMPRESS3D
             </span>
-          
-            <p className="text-sm text-gray-400 tracking-wide mb-6">
-              Design. Create. Impress.
-            </p>
+            <div className="mb-4">
+              <img src="/IMPRESS3D.png" alt="Impress3D Logo" className="w-72 h-auto object-contain" />
+            </div>
+            
+            {/* Tagline is now integrated into the logo image and styled below it in the provided asset */}
 
-            {/* Legal Links Integration */}
+            {/* Legal Links Integration - UNCHANGED */}
             <div className="flex flex-col gap-2 border-t border-gray-800 pt-6 w-full">
               <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-2">Internal</h3>
               <Link to="/privacy" className="text-xs uppercase font-bold text-gray-400 hover:text-white transition-colors">
@@ -37,7 +34,7 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Instagram */}
+          {/* Instagram - UNCHANGED */}
           <div className="flex flex-col">
             <h3 className="text-xs font-bold uppercase tracking-widest mb-6 text-gray-400">Follow Us</h3>
             <a 
@@ -53,7 +50,7 @@ const Footer = () => {
             </a>
           </div>
 
-          {/* WhatsApp */}
+          {/* WhatsApp - UNCHANGED */}
           <div className="flex flex-col">
             <h3 className="text-xs font-bold uppercase tracking-widest mb-6 text-gray-400">WhatsApp</h3>
             <a 
@@ -69,7 +66,7 @@ const Footer = () => {
             </a>
           </div>
 
-          {/* Email */}
+          {/* Email - UNCHANGED */}
           <div className="flex flex-col">
             <h3 className="text-xs font-bold uppercase tracking-widest mb-6 text-gray-400">Contact</h3>
             <a 
@@ -84,7 +81,7 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Bottom Bar */}
+        {/* Bottom Bar - UNCHANGED */}
         <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-gray-400">
