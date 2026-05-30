@@ -83,7 +83,7 @@ const Homepage = () => {
               IMPRESS3D
             </h1>
             <p className="text-sm md:text-base max-w-md mx-auto font-light tracking-[0.2em] uppercase opacity-80">
-              DESIGN. CREATE. IMPRESS.
+              DESIGN • CREATE • IMPRESS
             </p>
           </div>
         </div>
