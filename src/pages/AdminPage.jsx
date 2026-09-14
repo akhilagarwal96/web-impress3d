@@ -155,9 +155,11 @@ const AdminPage = () => {
         order: prev.order
       }));
 
+      // Redirect to admin home after short delay
       setTimeout(() => {
+        setActiveForm(null);
         setCategorySuccess(false);
-      }, 3000);
+      }, 1500);
 
     } catch (error) {
       console.error("Error adding category:", error);
@@ -400,10 +402,13 @@ const AdminPage = () => {
       });
       setProductImages([]);
 
+      // Redirect to admin home after short delay
       setTimeout(() => {
+        setActiveForm(null);
         setProductSuccess(false);
         setGithubStatus('');
-      }, 10000);
+        setPrUrl('');
+      }, 2000);
 
     } catch (error) {
       console.error("Error adding product:", error);
