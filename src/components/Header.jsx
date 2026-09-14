@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, User, X, Heart, LogOut } from 'lucide-react';
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { Menu, User, X, Heart, LogOut, Settings } from 'lucide-react';
+import { collection, getDocs, query, orderBy, doc, getDoc } from "firebase/firestore";
 import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import { db, auth, googleProvider } from '../firebase';
 
@@ -12,11 +12,31 @@ const Header = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Auth state listener
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      
+      // Check if user is admin
+      if (currentUser) {
+        try {
+          const adminDocRef = doc(db, "admin", "user");
+          const adminDocSnap = await getDoc(adminDocRef);
+          if (adminDocSnap.exists()) {
+            const adminData = adminDocSnap.data();
+            setIsAdmin(adminData.email === currentUser.email);
+          } else {
+            setIsAdmin(false);
+          }
+        } catch (error) {
+          console.error("Error checking admin status:", error);
+          setIsAdmin(false);
+        }
+      } else {
+        setIsAdmin(false);
+      }
     });
 
     return () => unsubscribe();
@@ -93,6 +113,16 @@ const Header = () => {
               className="w-10 h-10 flex items-center justify-center hover:text-red-500 transition-colors cursor-pointer group"
             >
               <Heart size={24} className="group-hover:fill-current" />
+            </Link>
+          )}
+
+          {/* Admin Settings Icon - Only show if user is admin */}
+          {isAdmin && (
+            <Link 
+              to="/admin" 
+              className="w-10 h-10 flex items-center justify-center hover:text-blue-500 transition-colors cursor-pointer group"
+            >
+              <Settings size={24} className="group-hover:rotate-90 transition-transform duration-300" />
             </Link>
           )}
 
